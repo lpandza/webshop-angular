@@ -1,0 +1,24 @@
+.product {
+  background-color: #eee
+}
+
+.brand {
+  font-size: 13px
+}
+
+.act-price {
+  color: #06362e;
+  font-weight: 700
+}
+
+.dis-price {
+  text-decoration: line-through
+}
+
+.about {
+  font-size: 14px
+}
+
+.color {
+  margin-bottom: 10px
+}
