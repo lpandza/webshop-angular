@@ -6,6 +6,7 @@ import { ItemComponent } from './item/item.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
 import {FormsModule} from "@angular/forms";
 import {NgxPaginationModule} from "ngx-pagination";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {NgxPaginationModule} from "ngx-pagination";
         CommonModule,
         ItemRoutingModule,
         FormsModule,
-        NgxPaginationModule
+        NgxPaginationModule,
+        FontAwesomeModule
     ]
 })
 export class ItemModule { }

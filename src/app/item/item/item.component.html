@@ -7,6 +7,11 @@
   </div>
 </header>
 
+<div *ngIf="isOrderPlaced" class="alert alert-success alert-dismissible fade show">
+  <strong>Success!</strong> Your order has been placed.
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+
 <section class="py-5">
   <div class="container px-4 px-lg-5 mt-5">
     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-lg-end">
@@ -27,11 +32,14 @@
       <div class="row justify-content-center">
         <div class="col mb-5">
           <div class="card">
-            <article class="card-group-item">
+            <article class="filter-group">
               <header class="card-header">
-                <h6 class="title">Brands</h6>
-              </header>
-              <div class="filter-content">
+                <a  data-bs-toggle="collapse" data-bs-target="#collapse_aside1"
+                    data-abc="true" aria-expanded="false" class="collapsed">
+                <h6 class="title">Brands <fa-icon [icon]="['fas', 'square-caret-down']"></fa-icon></h6>
+
+                </a> </header>
+              <div class="filter-content collapse" id="collapse_aside1" style="">
                 <div class="card-body">
                   <form>
                     <div *ngFor="let brand of brands">
@@ -40,16 +48,40 @@
                           (change)="onCheckboxChange(brand.id, $event.target)"
                           class="form-check-input"
                           type="checkbox"
-                          value="">
+                          value=""
+                          [checked]=setCheckbox(brand.id)>
                         <span class="form-check-label">
                           {{brand.name}}
                         </span>
                       </label>
                     </div>
                   </form>
-                </div> <!-- card-body.// -->
+                </div>
               </div>
-            </article> <!-- card-group-item.// -->
+            </article>
+<!--            <article class="card-group-item">-->
+<!--              <header class="card-header">-->
+<!--                <h6 class="title">Brands</h6>-->
+<!--              </header>-->
+<!--              <div class="filter-content">-->
+<!--                <div class="card-body">-->
+<!--                  <form>-->
+<!--                    <div *ngFor="let brand of brands">-->
+<!--                      <label class="form-check">-->
+<!--                        <input-->
+<!--                          (change)="onCheckboxChange(brand.id, $event.target)"-->
+<!--                          class="form-check-input"-->
+<!--                          type="checkbox"-->
+<!--                          value="">-->
+<!--                        <span class="form-check-label">-->
+<!--                          {{brand.name}}-->
+<!--                        </span>-->
+<!--                      </label>-->
+<!--                    </div>-->
+<!--                  </form>-->
+<!--                </div> &lt;!&ndash; card-body.// &ndash;&gt;-->
+<!--              </div>-->
+<!--            </article> &lt;!&ndash; card-group-item.// &ndash;&gt;-->
           </div> <!-- card.// -->
         </div>
 
@@ -84,7 +116,6 @@
             </article> <!-- card-group-item.// -->
           </div> <!-- card.// -->
         </div>
-        <button type="button" class="btn btn-outline-primary" id="filterbtn">Filter</button>
       </div>
     </div>
 
@@ -114,7 +145,12 @@
           <!-- Product actions-->
           <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
             <div class="text-center"><a (click)="onSelect(item)" class="btn btn-outline-secondary mt-auto">Details</a></div>
-            <div class="text-center"><a class="btn btn-outline-dark mt-auto" >Add to cart</a></div>
+            <div *ngIf="!isItemInCart(item)" class="text-center">
+              <button (click)="addToCart(item)"  [disabled]="item.quantity < 1" class="btn btn-outline-dark mt-auto" >Add to cart</button>
+            </div>
+            <div *ngIf="isItemInCart(item)" class="text-center">
+              <a (click)="removeFromCart(item)" class="btn btn-outline-dark mt-auto" >Remove fom cart</a>
+            </div>
           </div>
         </div>
       </div>

@@ -8,6 +8,9 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {SharedModule} from "./shared/shared.module";
 import {NgxPaginationModule} from "ngx-pagination";
 import {RemoveUndefinedParamsInterceptor} from "./item/remove-undefined-params.interceptor";
+import { FontAwesomeModule, FaIconLibrary } from "@fortawesome/angular-fontawesome";
+import {faSquare, faCheckSquare, faSquareCaretDown, faTrash} from '@fortawesome/free-solid-svg-icons';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +22,8 @@ import {RemoveUndefinedParamsInterceptor} from "./item/remove-undefined-params.i
         AppRoutingModule,
         HttpClientModule,
         NgxPaginationModule,
-        SharedModule
+        SharedModule,
+        FontAwesomeModule
     ],
   providers: [
     {
@@ -30,4 +34,13 @@ import {RemoveUndefinedParamsInterceptor} from "./item/remove-undefined-params.i
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(library: FaIconLibrary) {
+    library.addIcons(
+      faSquare,
+      faCheckSquare,
+      faSquareCaretDown,
+      faTrash
+    )
+  }
+}

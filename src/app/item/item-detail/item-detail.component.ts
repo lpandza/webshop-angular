@@ -16,9 +16,11 @@ export class ItemDetailComponent implements OnInit {
   ) { }
 
   item: Item;
+  cart: Item[];
 
   ngOnInit(): void {
     this.getItem();
+    this.getCart();
   }
 
   getItem(): void{
@@ -30,4 +32,21 @@ export class ItemDetailComponent implements OnInit {
       });
   }
 
+  addItemToCart(item: Item) {
+    this.itemService.addItemToCart(item);
+  }
+
+  isItemInCart(item: Item) {
+    return this.cart.some(i => i.id == item.id);
+  }
+
+  removeItemFromCart(item: Item) {
+    this.itemService.removeItemFromCart(item);
+    let index = this.cart.indexOf(item);
+    this.cart.splice(index, 1);
+  }
+
+  private getCart() {
+    this.cart = this.itemService.getCart();
+  }
 }

@@ -7,6 +7,7 @@ import {BrandService} from "../../brand/brand.service";
 import {Brand} from "../../model/brand";
 import {ItemPage} from "../../model/item-page";
 import {ItemRequest} from "../../model/item-request";
+import {OrderService} from "../../order/order.service";
 
 @Component({
   selector: 'app-item',
@@ -15,8 +16,9 @@ import {ItemRequest} from "../../model/item-request";
 })
 export class ItemComponent implements OnInit {
   constructor(
-    private itemService: ItemService,
+    public itemService: ItemService,
     private brandService: BrandService,
+    private orderService: OrderService,
     private router: Router
   ) { }
 
@@ -25,7 +27,9 @@ export class ItemComponent implements OnInit {
   itemPageSubject: ReplaySubject<ItemPage>;
   itemSubscription: Subscription;
   brandSubscription: Subscription;
+  selectedBrandSubscription: Subscription;
   brands: Brand[];
+  selectedBrand: Brand;
 
   selectedSort = "";
   minPrice: number;
@@ -44,10 +48,20 @@ export class ItemComponent implements OnInit {
     maxPrice: undefined,
     brands: []
   }
+  isCollapsed = false;
+
+  cart: Item[] = [];
+  inCart = false;
+
+  isOrderPlaced = false;
+
 
   ngOnInit(): void {
     this.getItems();
     this.getBrands();
+    this.getSelectedBrand();
+    this.cart = [...this.itemService.getCart()];
+    this.getIsOrderPlaced();
   }
 
   getItems(): void{
@@ -65,6 +79,31 @@ export class ItemComponent implements OnInit {
         this.brands = brands;
       });
   }
+
+  private getSelectedBrand(){
+    this.selectedBrandSubscription = this.brandService
+      .selectedBrandSubject
+      .subscribe(brand =>{
+        this.selectedBrand = brand;
+        console.log(this.selectedBrand);
+      });
+    if (this.selectedBrand){
+      this.itemRequest.brands?.push(this.selectedBrand.id);
+      this.itemService.getItemsPage(this.itemRequest);
+    }
+
+  }
+
+  setCheckbox(id: number){
+    if (!this.selectedBrand) return false;
+    return id == this.selectedBrand.id;
+  }
+
+  getIsOrderPlaced(){
+    this.orderService.isOrderPlacedEmitter
+      .subscribe(isOrderPlaced => this.isOrderPlaced = isOrderPlaced);
+  }
+
 
   onSelect(item: Item) {
     this.selectedItem = item;
@@ -97,6 +136,21 @@ export class ItemComponent implements OnInit {
 
   onPriceChange() {
     this.itemService.getItemsPage(this.itemRequest);
+  }
+
+  addToCart(item: Item){
+    this.cart.push(item);
+    this.itemService.addItemToCart(item);
+  }
+
+  removeFromCart(item: Item){
+    let index = this.cart.indexOf(item);
+    this.cart.splice(index, 1);
+    this.itemService.removeItemFromCart(item);
+  }
+
+  isItemInCart(item: Item): boolean{
+    return this.cart.some(i => i.id == item.id);
   }
 
   ngOnDestroy(){

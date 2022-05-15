@@ -15,7 +15,7 @@ export class RemoveUndefinedParamsInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     let params = request.params;
     for (const key of request.params.keys()) {
-      if (params.get(key) === undefined) {
+      if (params.get(key) === undefined || params.get(key) === null) {
         params = params.delete(key, undefined);
       }
     }

@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
-import {BehaviorSubject, catchError, Observable, ReplaySubject, throwError} from "rxjs";
+import {BehaviorSubject, catchError, Observable, ReplaySubject, Subject, throwError} from "rxjs";
 import {Item} from "../model/item";
 import {environment} from "../../environments/environment";
 import {Router} from "@angular/router";
 import {ItemPage} from "../model/item-page";
 import {ItemRequest} from "../model/item-request";
+import {Order} from "../model/order";
+import {OrderService} from "../order/order.service";
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,10 @@ export class ItemService {
   items: Item[];
   itemPage: ReplaySubject<ItemPage> = new ReplaySubject<ItemPage>(1);
   item: ReplaySubject<Item> = new ReplaySubject<Item>(1);
+  itemCountSubject : Subject<number> = new Subject<number>();
+
+  public itemCount = 0;
+  private cart: Item[] = [];
 
   constructor(
     private http: HttpClient,
@@ -51,7 +57,6 @@ export class ItemService {
   }
 
   getItemsPage(itemRequest: any){
-    console.log(itemRequest);
     this.http.get<ItemPage>
       (`${this.itemUrl}`, {params: new HttpParams({fromObject: itemRequest}) })
       .pipe(
@@ -61,6 +66,30 @@ export class ItemService {
         this.items = itemPage.content
         this.itemPage.next(itemPage);
       });
+  }
+
+  addItemToCart(item: Item){
+    console.log(this.cart);
+    this.itemCount++;
+    this.cart.push(item);
+    item.itemCount = 1;
+    this.itemCountSubject.next(this.cart.length);
+  }
+
+  removeItemFromCart(item: Item){
+    this.itemCount--;
+    let index = this.cart.indexOf(item);
+    this.cart.splice(index, 1);
+    this.itemCountSubject.next(this.itemCount);
+  }
+
+  resetItemCount(){
+    this.itemCountSubject.next(this.cart.length);
+  }
+
+
+  getCart(){
+    return this.cart;
   }
 
   private handleError(error: HttpErrorResponse) {

@@ -11,6 +11,7 @@ export class BrandService {
 
   private brandUrl = environment.API_URL + '/api/brand';
   private brandsSubject: ReplaySubject<Brand[]> = new ReplaySubject<Brand[]>(1);
+  selectedBrandSubject: ReplaySubject<Brand> = new ReplaySubject<Brand>(1);
 
   brands: Brand[];
 
@@ -27,6 +28,10 @@ export class BrandService {
         this.brands = brand;
         this.brandsSubject.next(this.brands);
       });
+  }
+
+  setSelectedBrand(selectedBrand: Brand){
+    this.selectedBrandSubject.next(selectedBrand);
   }
 
   getBrandsSubject(){

@@ -1,0 +1,45 @@
+<div class="card">
+  <div class="row">
+    <div class="col-md-12 cart">
+      <div class="title">
+        <div class="row">
+          <div class="col">
+            <h4><b>Shopping Cart</b></h4>
+          </div>
+          <div class="col align-self-center text-right text-muted">{{cart.length}}</div>
+        </div>
+      </div>
+      <div *ngFor="let item of cart">
+        <div class="row">
+          <div class="row main align-items-center">
+            <div class="col-2"><img width="400px" src="https://dummyimage.com/400x400/60aaf8/fff.png"></div>
+            <div class="col">
+              <div class="row text-muted">{{item.brand.name}}</div>
+              <div class="row">{{item.name}}</div>
+            </div>
+            <div class="col">
+<!--              <button type="button" class="btn btn-outline-secondary btn-sm">-</button>-->
+              <input [(ngModel)]="item.itemCount"
+                     onkeydown="return false"
+                     value="1" size="1" type="number" min="1"
+                     [max]="item.quantity" class="border">
+<!--              <button type="button" (click)="onQuantityChange(item)" class="btn btn-outline-secondary btn-sm">+</button>-->
+            </div>
+            <div class="col">
+              &dollar; {{item.price}}
+            </div>
+            <div class="col">
+              <a (click)="removeFromCart(item)"><fa-icon [icon]="['fas', 'trash']" size="2x"></fa-icon></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="back-to-shop"><a href="#">&leftarrow;</a><span class="text-muted">Back to shop</span></div>
+      <div class="row">
+        <div class="row main align-items-end">
+          <button [disabled]="cart.length == 0" routerLink="/order" type="button" class="btn btn-primary">Make Order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

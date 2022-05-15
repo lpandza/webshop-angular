@@ -6,5 +6,6 @@ export interface Item {
   description: string,
   price: number,
   quantity: number,
-  brand: Brand
+  brand: Brand,
+  itemCount?: number
 }
