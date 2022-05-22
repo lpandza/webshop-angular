@@ -42,7 +42,7 @@ export class ItemComponent implements OnInit {
   itemRequest: ItemRequest ={
     key: undefined,
     direction: undefined,
-    itemsPerPage: 3,
+    itemsPerPage: 6,
     page: 1,
     minPrice: undefined,
     maxPrice: undefined,
